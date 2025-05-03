@@ -10,7 +10,8 @@ class Categoria extends Model
 {
     use HasFactory;
 
-    // Relação com os serviços
+    protected $fillable = ['nome', 'descricao'];
+
     public function servicos()
     {
         return $this->hasMany(Servico::class);
