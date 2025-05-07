@@ -10,7 +10,7 @@ class Servico extends Model
 {
     use HasFactory;
 
-    protected  $filliable = ["nome", "descricao", "preco", "categoria_id"];
+    protected  $fillable = ["nome", "description", "preco", "categoria_id"];
 
     public function categoria()
     {
