@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Categoria;
+use App\Http\Requests\StoreCategoriaRequest;
 
 class CategoriaController extends Controller
 {
@@ -19,9 +20,9 @@ class CategoriaController extends Controller
         // Código para exibir formulário de criação
     }
 
-    public function store(Request $request)
+    public function store(StoreCategoriaRequest $request)
     {
-        // Código para salvar nova categoria
+        return Categoria::create($request->validated());
     }
 
     public function show($id)
