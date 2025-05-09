@@ -4,62 +4,58 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Models\Servico;
 
 class ServiceController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+    // Lista todos os serviços
     public function index()
     {
-        //
+        return response()->json(Servico::all());
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
+    // Cria um novo serviço
     public function store(Request $request)
     {
-        //
+        $validated = $request->validate([
+            'nome' => 'required|string|max:255',
+            'description' => 'nullable|string',
+            'preco' => 'required|numeric',
+            'categoria_id' => 'required|exists:categorias,id'
+        ]);
+
+        $servico = Servico::create($validated);
+        return response()->json($servico, 201);
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
+    // Retorna um serviço específico
+    public function show($id)
     {
-        //
+        $servico = Servico::findOrFail($id);
+        return response()->json($servico);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
+    // Atualiza um serviço existente
+    public function update(Request $request, $id)
     {
-        //
+        $servico = Servico::findOrFail($id);
+
+        $validated = $request->validate([
+            'nome' => 'sometimes|required|string|max:255',
+            'description' => 'nullable|string',
+            'preco' => 'sometimes|required|numeric',
+            'categoria_id' => 'sometimes|required|exists:categorias,id'
+        ]);
+
+        $servico->update($validated);
+        return response()->json($servico);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
+    // Deleta um serviço
+    public function destroy($id)
     {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
+        $servico = Servico::findOrFail($id);
+        $servico->delete();
+        return response()->json(['message' => 'Serviço deletado com sucesso.']);
     }
 }
