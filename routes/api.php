@@ -2,9 +2,12 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\ValidationException;
 use App\Http\Controllers\CategoriaController;
 use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\AuthController;
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -14,17 +17,22 @@ use App\Http\Controllers\AuthController;
 | Aqui é onde você define suas rotas de API.
 */
 
-// Exemplo de rota de teste
+// Rota pública para teste
 Route::get('/teste', function () {
     return response()->json(['message' => 'API está ativa!']);
 });
 
-// Rotas RESTful para categorias e serviços
-Route::apiResource('categorias', CategoriaController::class);
-Route::apiResource('servicos', ServiceController::class);
-
+// Rotas públicas de autenticação
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
+
+// Rota protegida para obter dados do usuário autenticado
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
+});
+
+// Rotas protegidas por autenticação Sanctum
+Route::middleware('auth:sanctum')->group(function () {
+    Route::apiResource('categorias', CategoriaController::class);
+    Route::apiResource('servicos', ServiceController::class);
 });
